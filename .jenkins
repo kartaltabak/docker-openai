@@ -1,0 +1,33 @@
+String cron_string = BRANCH_NAME == "main" ? "@monthly" : ""
+
+tag = new Date().format("yyyyMMdd", TimeZone.getTimeZone('UTC'))
+
+pipeline {
+    agent any
+    options {
+        disableConcurrentBuilds()
+    }
+    triggers { cron(cron_string) }
+    stages {
+        stage('Build & Push') {
+            steps {
+                script {
+                    sh 'docker pull ubuntu:latest'
+                    docker.withRegistry('https://registry-1.docker.io', 'Dockerhub-kartaltabak') {
+                        def repoName = "kartaltabak/openai"
+                        def taggedName = repoName + ":" + tag
+                        def image = docker.build(taggedName, "docker")
+
+                        sh "docker run --rm ${taggedName} -version"
+
+                        image.push()
+
+                        def latestName = repoName + ":latest"
+                        sh "docker tag " + taggedName + " " + latestName
+                        docker.image(latestName).push()
+                    }
+                }
+            }
+        }
+    }
+}

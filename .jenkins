@@ -14,15 +14,16 @@ pipeline {
                 script {
                     sh 'docker pull ubuntu:latest'
                     docker.withRegistry('https://registry-1.docker.io', 'Dockerhub-kartaltabak') {
-                        def repoName = "kartaltabak/openai"
-                        def taggedName = repoName + ":" + tag
+                        String repoName = "kartaltabak/openai"
+                        String taggedName = repoName + ":" + tag
                         def image = docker.build(taggedName, "docker")
 
-                        sh "docker run --rm ${taggedName} -version"
+                        sh "docker run --rm ${taggedName} curl --version"
+                        sh "docker run --rm ${taggedName} jq --version"
 
                         image.push()
 
-                        def latestName = repoName + ":latest"
+                        String latestName = repoName + ":latest"
                         sh "docker tag " + taggedName + " " + latestName
                         docker.image(latestName).push()
                     }

@@ -3,6 +3,9 @@
 # Validate input arguments
 if [ $# -ne 2 ]; then
     echo "Usage: $0 <filename> <text>"
+    if [ "$1" = "help" ]; then
+        exit 0
+    fi
     exit 1
 fi
 

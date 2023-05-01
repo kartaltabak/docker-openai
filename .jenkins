@@ -20,7 +20,7 @@ pipeline {
 
                         sh "docker run --rm ${taggedName} curl --version"
                         sh "docker run --rm ${taggedName} jq --version"
-                        sh "docker run --rm ${taggedName} create-image.sh"
+                        sh "docker run --rm ${taggedName} create-image.sh help"
 
                         image.push()
 

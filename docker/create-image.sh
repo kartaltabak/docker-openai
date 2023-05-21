@@ -29,6 +29,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+echo "Response: $RESPONSE"
+
 URL=$(echo $RESPONSE | jq -r '.data[0].url')
 
 if [ -z "$URL" ]; then

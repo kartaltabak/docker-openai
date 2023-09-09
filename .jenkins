@@ -2,11 +2,13 @@
 
 dockerBuildPipeline(
         mainBranchCron: '@monthly',
-        baseImage: 'ubuntu:latest',
-        registryRepoName: 'kartaltabak/openai',
-        imageTestCommands: [
-                'curl --version',
-                'jq --version',
-                'create-image.sh help'
+        ikmageBuilder: [
+                baseImage        : 'ubuntu:latest',
+                registryRepoName : 'kartaltabak/openai',
+                imageTestCommands: [
+                        'curl --version',
+                        'jq --version',
+                        'create-image.sh help'
+                ]
         ]
 )

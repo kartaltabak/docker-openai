@@ -2,7 +2,7 @@
 
 dockerBuildPipeline(
         mainBranchCron: '@monthly',
-        ikmageBuilder: [
+        imageBuilder: [
                 baseImage        : 'ubuntu:latest',
                 registryRepoName : 'kartaltabak/openai',
                 imageTestCommands: [

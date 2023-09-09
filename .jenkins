@@ -1,35 +1,12 @@
-String cron_string = BRANCH_NAME == "main" ? "@monthly" : ""
+@Library('github-jenkins-pipeline') _
 
-tag = new Date().format("yyyyMMdd", TimeZone.getTimeZone('UTC'))
-
-pipeline {
-    agent any
-    options {
-        disableConcurrentBuilds()
-    }
-    triggers { cron(cron_string) }
-    stages {
-        stage('Build & Push') {
-            steps {
-                script {
-                    sh 'docker pull ubuntu:latest'
-                    docker.withRegistry('https://registry-1.docker.io', 'Dockerhub-kartaltabak') {
-                        String repoName = "kartaltabak/openai"
-                        String taggedName = repoName + ":" + tag
-                        def image = docker.build(taggedName, "docker")
-
-                        sh "docker run --rm ${taggedName} curl --version"
-                        sh "docker run --rm ${taggedName} jq --version"
-                        sh "docker run --rm ${taggedName} create-image.sh help"
-
-                        image.push()
-
-                        String latestName = repoName + ":latest"
-                        sh "docker tag " + taggedName + " " + latestName
-                        docker.image(latestName).push()
-                    }
-                }
-            }
-        }
-    }
-}
+dockerBuildPipeline(
+        mainBranchCron: '@monthly',
+        baseImage: 'ubuntu:latest',
+        registryRepoName: 'kartaltabak/openai',
+        imageTestCommands: [
+                'curl --version',
+                'jq --version',
+                'create-image.sh help'
+        ]
+)

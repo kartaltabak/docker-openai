@@ -6,7 +6,7 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    - cron: '0 0 1 * *'  # At midnight on the 1st day of each month
+    - cron: '0 0 28 * *'  # At midnight on the 28th day of each month
 env:
   IMAGE: kartaltabak/openai
   TEST_TAG: kartaltabak/openai:test
